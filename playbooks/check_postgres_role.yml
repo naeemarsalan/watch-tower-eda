@@ -1,0 +1,26 @@
+---
+- name: Check PostgreSQL Role
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Check if PostgreSQL is reachable
+      shell: |
+        psql -U postgres -h {{ db_host }} -c "SELECT pg_is_in_recovery();"
+      register: pg_status
+      ignore_errors: true
+
+    - name: Set fact based on status
+      set_fact:
+        pg_role: >-
+          {% if pg_status.rc != 0 %}
+            offline
+          {% elif '"t"' in pg_status.stdout %}
+            standby
+          {% else %}
+            primary
+          {% endif %}
+
+    - name: Print PostgreSQL role
+      debug:
+        msg: "PostgreSQL is {{ pg_role }}"
+

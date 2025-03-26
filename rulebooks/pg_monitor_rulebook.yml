@@ -1,17 +1,15 @@
 - name: Monitor PostgreSQL Role
   hosts: localhost
   sources:
-    - ansible.eda.tick:
-        delay: 60
+    - ansible.eda.periodic:
+        seconds: 60
 
   rules:
-    - name: Trigger PostgreSQL Monitor Job Template
+    - name: Check PostgreSQL role
       condition: event.payload is defined
       action:
-        run_job_template:
-          name: "Check Postgres"
-          organization: "Default"
-          job_args:
-            extra_vars:
-              db_host: "172.16.0.2"
+        run_playbook:
+          name: playbooks/check_postgres_role.yml
+          extra_vars:
+            db_host: "your.db.hostname.here"
 

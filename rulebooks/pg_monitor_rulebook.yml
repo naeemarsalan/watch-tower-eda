@@ -1,9 +1,8 @@
 - name: Monitor PostgreSQL Role
   hosts: localhost
   sources:
-    - ansible.eda.periodic:
-        seconds: 60
-
+    - ansible.eda.webhook:
+        port: 5000
   rules:
     - name: Check PostgreSQL role
       condition: event.payload is defined

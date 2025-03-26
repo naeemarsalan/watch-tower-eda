@@ -1,6 +1,7 @@
 ---
 - name: Check PostgreSQL Role
   hosts: localhost
+  connection: local
   gather_facts: false
   tasks:
     - name: Check if PostgreSQL is reachable

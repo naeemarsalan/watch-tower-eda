@@ -1,15 +1,15 @@
----
 - name: Monitor PostgreSQL Role
   hosts: localhost
   sources:
     - ansible.eda.periodic:
-        seconds: 60  # check every 60 seconds
+        seconds: 60
 
   rules:
     - name: Check PostgreSQL role
       condition: event.payload is defined
       action:
         run_playbook:
-          name: check_postgres_role.yml
-          inventory: inventories/localhost_inventory.yml
+          name: playbooks/check_postgres_role.yml
+          extra_vars:
+            db_host: "your.db.hostname.here"
 

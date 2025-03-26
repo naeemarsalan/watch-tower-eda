@@ -11,7 +11,5 @@
       action:
         run_playbook:
           name: check_postgres_role.yml
-          inventory: localhost_inventory.yml
-          extra_vars:
-            db_host: "your.db.hostname.here"
+          inventory: inventories/localhost_inventory.yml
 

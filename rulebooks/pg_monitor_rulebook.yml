@@ -11,5 +11,5 @@
         run_job_template:
           name: Check Postgres
           extra_vars:
-            db_host: "your.db.hostname.here"
+            db_host: ""
 

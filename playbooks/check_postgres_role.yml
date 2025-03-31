@@ -1,6 +1,6 @@
 ---
 - name: Check PostgreSQL Role
-  hosts: {{ db_host }}
+  hosts: "{{ db_host }}"
   connection: local
   gather_facts: false
   tasks:

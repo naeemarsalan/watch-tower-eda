@@ -1,7 +1,7 @@
 - name: Monitor PostgreSQL Role
   hosts: localhost
   sources:
-    - ansible.eda.periodic:
+    - ansible.eda.tick:
         seconds: 60
 
   rules:

@@ -8,8 +8,8 @@
     - name: Check PostgreSQL role
       condition: event.payload is defined
       action:
-        run_playbook:
-          name: playbooks/check_postgres_role.yml
+        run_job_template:
+          name: Check Postgres
           extra_vars:
             db_host: "your.db.hostname.here"
 

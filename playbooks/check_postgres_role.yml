@@ -4,6 +4,10 @@
   connection: local
   gather_facts: false
   tasks:
+    - name: Collect role info.
+      community.postgresql.postgresql_info:
+        filter: "roles"
+    
     - name: Check if PostgreSQL is reachable
       shell: |
         psql -U postgres -h {{ db_host }} -c "SELECT pg_is_in_recovery();"

@@ -8,7 +8,7 @@
     - name: Collect role info.
       become: true
       become_user: postgres
-      become_method: sudo+su
+      become_method: sudo
       community.postgresql.postgresql_info:
         filter: "roles"
 

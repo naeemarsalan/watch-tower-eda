@@ -1,8 +1,8 @@
 - name: Monitor PostgreSQL Role
   hosts: localhost
   sources:
-    - ansible.eda.tick:
-        seconds: 60
+    type: tick
+    tick_interval: 45
 
   rules:
     - name: Check PostgreSQL role

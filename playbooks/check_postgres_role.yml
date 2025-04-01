@@ -2,8 +2,8 @@
 - name: Check PostgreSQL Role
   hosts: "{{ db_host }}"
   become: true
+  become_method: sudo
   become_user: postgres
-  connection: local
   gather_facts: false
   tasks:
     - name: Collect role info.

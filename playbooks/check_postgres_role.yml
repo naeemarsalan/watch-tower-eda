@@ -1,6 +1,8 @@
 ---
 - name: Check PostgreSQL Role
   hosts: "{{ db_host }}"
+  become: true
+  become_user: postgres
   connection: local
   gather_facts: false
   tasks:

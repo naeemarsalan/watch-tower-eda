@@ -7,8 +7,7 @@
           port: 5432
           dbname: "{{ db_name }}"
         channels:
-          - my_events
-          - my_alerts
+          - text
 
   rules:
     - name: Check PostgreSQL role

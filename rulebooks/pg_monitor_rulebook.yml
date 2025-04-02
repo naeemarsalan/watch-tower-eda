@@ -1,14 +1,12 @@
 - name: Monitor PostgreSQL Role
   hosts: all
   sources:
-    - ansible.eda.pg_listener:
-        dsn: "hostaddr={{ db_hostaddr }} port=5432 dbname={{ db_name }} user={{ db_user }} password={{ db_password }}"
-        channels:
-          - text
+    - ansible.eda.file_watch:
+        path: "/tmp/pg_role"
 
   rules:
     - name: Check PostgreSQL role
-      condition: event.data.pg_role contains "primary"
+      condition: event.payload.pg_role contains "primary"
       action:
         run_job_template:
           name: "Scale up AAP CR"

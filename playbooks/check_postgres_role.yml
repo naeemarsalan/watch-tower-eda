@@ -6,12 +6,8 @@
   become_user: postgres
   gather_facts: false
   tasks:
-    - name: Collect role info.
-      community.postgresql.postgresql_info:
-        filter: "roles"
-    
     - name: Check if PostgreSQL is reachable
-      shell: |
+      command: |
         psql -U postgres -h {{ db_host }} -c "SELECT pg_is_in_recovery();"
       register: pg_status
       ignore_errors: true
@@ -30,3 +26,11 @@
     - name: Print PostgreSQL role
       debug:
         msg: "PostgreSQL is {{ pg_role }}"
+    
+    - name: Template the postgres file to the host and populate it with its role. 
+      ansible.builtin.template:
+        src: ../files/pg_role.j2
+        dest: /tmp/pg_role
+        owner: postgres
+        group: postgres
+        mode: '0644'

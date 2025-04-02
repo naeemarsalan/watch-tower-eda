@@ -2,18 +2,13 @@
   hosts: localhost
   sources:
     - ansible.eda.pg_listener:
-        postgres_params:
-          hostaddr: "{{ db_host_ip }}"
-          port: "{{ db_port }}"
-          dbname: "{{ db_name }}"
-          user: "{{ db_user }}"
-          password: "{{ db_password }}"
+        dsn: "hostaddr={{ db_hostaddr }} port=5432 dbname={{ db_name }} user={{ db_user }} password={{ db_password }}"
         channels:
           - text
 
   rules:
     - name: Check PostgreSQL role
-      condition: event.payload is defined
+      condition: event.data is defined
       action:
-        run_job_template:
-          name: Check Postgres
+        run_playbook:
+          name: playbooks/check_postgres_role.yml

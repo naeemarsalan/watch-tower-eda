@@ -4,8 +4,10 @@
     - ansible.eda.pg_listener:
         postgres_params:
           host: "{{ db_host }}"
-          port: 5432
+          port: "{{ db_port }}"
           dbname: "{{ db_name }}"
+          user: "{{ db_user }}"
+          password: "{{ db_password }}"
         channels:
           - text
 

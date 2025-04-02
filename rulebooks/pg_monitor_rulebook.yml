@@ -5,14 +5,14 @@
         path: "/tmp/pg_role"
 
   rules:
-    - name: Check PostgreSQL role
+    - name: Scale up
       condition: event.payload.pg_role contains "primary"
       action:
         run_job_template:
           name: "Scale up AAP CR"
           organization: "Default"
 
-    - name: Check PostgreSQL role
+    - name: Scale down
       condition: event.data.pg_role contains "standby"
       action:
         run_job_template:

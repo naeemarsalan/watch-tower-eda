@@ -1,5 +1,5 @@
 - name: Monitor PostgreSQL Role
-  hosts: localhost
+  hosts: all
   sources:
     - ansible.eda.pg_listener:
         dsn: "hostaddr={{ db_hostaddr }} port=5432 dbname={{ db_name }} user={{ db_user }} password={{ db_password }}"

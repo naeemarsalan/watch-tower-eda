@@ -1,8 +1,14 @@
 - name: Monitor PostgreSQL Role
   hosts: localhost
   sources:
-    - ansible.eda.tick:
-        delay: 30
+    - ansible.eda.pg_listener:
+        postgres_params:
+          host: "{{ db_host }}"
+          port: 5432
+          dbname: "{{ db_name }}"
+        channels:
+          - my_events
+          - my_alerts
 
   rules:
     - name: Check PostgreSQL role
@@ -10,4 +16,3 @@
       action:
         run_job_template:
           name: Check Postgres
-

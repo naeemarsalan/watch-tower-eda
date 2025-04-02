@@ -1,6 +1,6 @@
 ---
 - name: Check PostgreSQL Role
-  hosts: "{{ db_host }}"
+  hosts: all
   become: true
   become_method: sudo
   become_user: postgres

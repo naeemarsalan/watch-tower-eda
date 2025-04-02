@@ -1,1 +1,4 @@
 eda-env
+inventories/db_host
+rulebooks/pg_monitor_rulebook_cli.yml
+playbooks/check_postgres_role_cli.yml

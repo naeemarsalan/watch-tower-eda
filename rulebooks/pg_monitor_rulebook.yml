@@ -8,8 +8,15 @@
 
   rules:
     - name: Check PostgreSQL role
-      condition: event.data.hello contains "world"
+      condition: event.data.pg_role contains "primary"
       action:
         run_job_template:
-          name: "Check Postgres - Hammer's Version"
+          name: "Scale up AAP CR"
+          organization: "Default"
+
+    - name: Check PostgreSQL role
+      condition: event.data.pg_role contains "standby"
+      action:
+        run_job_template:
+          name: "Scale down AAP CR"
           organization: "Default"

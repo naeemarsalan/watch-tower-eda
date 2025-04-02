@@ -3,7 +3,7 @@
   sources:
     - ansible.eda.pg_listener:
         postgres_params:
-          host: "{{ db_host }}"
+          hostaddr: "{{ db_host_ip }}"
           port: "{{ db_port }}"
           dbname: "{{ db_name }}"
           user: "{{ db_user }}"

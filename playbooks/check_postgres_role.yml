@@ -23,14 +23,7 @@
             primary
           {% endif %}
 
-    - name: Print PostgreSQL role
-      debug:
-        msg: "PostgreSQL is {{ pg_role }}"
-    
-    - name: Template the postgres file to the host and populate it with its role. 
-      ansible.builtin.template:
-        src: ../files/pg_role.j2
-        dest: /tmp/pg_role
-        owner: postgres
-        group: postgres
-        mode: '0644'
+    - name: Use pg_notify to alert EDA of any changes. 
+      command: | 
+        psql -h "{{ db_host }}" -U postgres -d "{{ db_name }}" -c "NOTIFY text, '{\"postgres_db_role\":\"{{ pg_role | trim }}\"}'"
+      ignore_errors: true

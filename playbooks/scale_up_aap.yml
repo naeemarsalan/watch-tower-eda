@@ -1,29 +1,17 @@
 - name: Example Playbook
   hosts: localhost
-  module_defaults:
-    redhat.openshift.openshift:
-      host: https://console-openshift-console.apps.hammer-sno.arsalan.io/
   tasks:
-    - name: Authenticate to OpenShift cluster and gell a list of all pods from any namespace
-      block:
-        - name: Include 'openshift_passwords.yml'
-          ansible.builtin.include_vars: openshift_passwords.yml
+    - name: Log in (obtain access token)
+      redhat.openshift.openshift_auth:
+        username: "{{ openshift_admin_user }}"
+        password: "{{ openshift_admin_password }}"
+        host: "{{ openshift_api_url }}"
+        validate_certs: false
+      register: openshift_auth_results
 
-        - name: Log in
-          redhat.openshift.openshift_auth:
-            username: "{{ openshift_admin_user }}"
-            password: "{{ openshift_admin_password }}"
-          register: openshift_auth_results
-
-        - name: Scale AAP CR replicas according to role. 
-          redhat.openshift.k8s:
-            api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
-            state: present
-            src: files/aap-cr.yml
-
-      always:
-        - name: If login succeeded, try to log out.
-          when: openshift_auth_results.openshift_auth.api_key is defined
-          redhat.openshift.openshift_auth:
-            state: absent
-            api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+    - name: Scale AAP CR replicas according to role. 
+      redhat.openshift.k8s:
+        state: present
+        src: ../files/aap-cr-up.yml
+        api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+        validate_certs: false

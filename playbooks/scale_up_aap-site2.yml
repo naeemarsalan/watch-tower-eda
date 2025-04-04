@@ -1,5 +1,6 @@
 - name: Bring up AAP Site 2
   hosts: localhost
+  gather_facts: false
   tasks:
     - name: Log in (obtain access token)
       redhat.openshift.openshift_auth:

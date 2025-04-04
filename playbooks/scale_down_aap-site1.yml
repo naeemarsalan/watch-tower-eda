@@ -1,5 +1,6 @@
 - name: Bring down AAP Site 1. 
   hosts: localhost
+  gather_facts: false
   tasks:
     - name: Log in (obtain access token)
       redhat.openshift.openshift_auth:

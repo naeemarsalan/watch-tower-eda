@@ -1,16 +1,15 @@
 - name: Check PostgreSQL Trigger
   hosts: all
   sources:
-  - sources:
-      - name: tick-check
-        plugin: eda.plugins.event_source.tick
-        configuration:
-          interval: 5  # Check every 60 seconds
+    - name: tick-check
+      plugin: eda.plugins.event_source.tick
+      configuration:
+        interval: 5  # Check every 60 seconds
 
-    rules:
-      - name: check for trigger queue.new_message_notify()
-        action:
-          run_job_template:
-            name: Check Postgres Trigger - Site 1 ..05 
-            organization: "Default"
+  rules:
+    - name: check for trigger queue.new_message_notify()
+      action:
+        run_job_template:
+          name: Check Postgres Trigger - Site 1 ..05 
+          organization: "Default"
           

@@ -1,11 +1,13 @@
 ---
 - name: Check PostgreSQL Role
-  hosts: localhost
-  connection: local
+  hosts: all
+  become: true
+  become_method: sudo
+  become_user: postgres
   gather_facts: false
   tasks:
     - name: Check if PostgreSQL is reachable
-      shell: |
+      command: |
         psql -U postgres -h {{ db_host }} -c "SELECT pg_is_in_recovery();"
       register: pg_status
       ignore_errors: true
@@ -15,13 +17,13 @@
         pg_role: >-
           {% if pg_status.rc != 0 %}
             offline
-          {% elif '"t"' in pg_status.stdout %}
+          {% elif "t" in pg_status.stdout %}
             standby
           {% else %}
             primary
           {% endif %}
 
-    - name: Print PostgreSQL role
-      debug:
-        msg: "PostgreSQL is {{ pg_role }}"
-
+    - name: Use pg_notify to alert EDA of any changes. 
+      command: | 
+        psql -h "{{ db_host }}" -U postgres -d "{{ db_name }}" -c "NOTIFY text, '{\"postgres_db_role\":\"{{ pg_role | trim }}\"}'"
+      when: pg_role == primary

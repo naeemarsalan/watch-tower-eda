@@ -3,7 +3,7 @@
   sources:
     - ansible.eda.pg_listener:
         dsn: "host={{ db_host }} port=5432 dbname={{ db_name }} user={{ db_user }} password={{ db_password }}"
-        channels: 
+        channels:
           - text
 
   rules:

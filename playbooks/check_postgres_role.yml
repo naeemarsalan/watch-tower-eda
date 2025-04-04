@@ -17,7 +17,7 @@
         pg_role: >-
           {% if pg_status.rc != 0 %}
             offline
-          {% elif '"t"' in pg_status.stdout %}
+          {% elif "t" in pg_status.stdout %}
             standby
           {% else %}
             primary

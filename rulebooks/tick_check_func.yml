@@ -1,9 +1,10 @@
 - name: Check PostgreSQL Trigger
   hosts: all
   sources:
-    - eda.plugins.event_source.tick:
-        configuration:
-          interval: 5  # Check every 60 seconds
+    - ansible.eda.pg_listener:
+        dsn: "host={{ db_host }} port=5432 dbname={{ db_name }} user={{ db_user }} password={{ db_password }}"
+        channels: 
+          - text
 
   rules:
     - name: check for trigger queue.new_message_notify()

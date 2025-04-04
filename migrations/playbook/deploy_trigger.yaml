@@ -9,7 +9,7 @@
     - name: Check for trigger in pg_trigger
       become: false
       shell: |
-        PGPASSWORD="redhat123" psql -h {{db_host}} -U {{db_name}} -d {{db_name}} -c "\d+ queue.message1" -P pager=off
+        PGPASSWORD="redhat123" psql -h {{db_host}} -U {{db_name}} -d {{db_name}} -c "\d+ queue.message" -P pager=off
       register: trigger_check
     
     - name: Fail if trigger is missing

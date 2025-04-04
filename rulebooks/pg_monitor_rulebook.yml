@@ -8,14 +8,14 @@
 
   rules:
     - name: Scale up
-      condition: event.payload.pg_role contains "primary"
+      condition: event.pg_role contains "primary"
       action:
         run_job_template:
           name: "Scale up AAP Site 1 CR"
           organization: "Default"
 
     - name: Scale down
-      condition: event.data.pg_role contains "standby"
+      condition: event.pg_role contains "standby"
       action:
         run_job_template:
           name: "Scale down AAP Site 1 CR"

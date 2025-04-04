@@ -4,3 +4,4 @@ rulebooks/pg_monitor_rulebook_cli.yml
 playbooks/check_postgres_role_cli.yml
 openshift_passwords.yml
 .vscode/settings.json
+.ansible

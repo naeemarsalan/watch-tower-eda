@@ -8,14 +8,14 @@
 
   rules:
     - name: Scale up
-      condition: event.meta.pg_role contains "primary"
+      condition: event.postgres_db_role == primary
       action:
         run_job_template:
           name: "Scale up AAP Site 1 CR"
           organization: "Default"
 
     - name: Scale down
-      condition: event.meta.pg_role contains "standby"
+      condition: event.postgres_db_role != primary
       action:
         run_job_template:
           name: "Scale down AAP Site 1 CR"

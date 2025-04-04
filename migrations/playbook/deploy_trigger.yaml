@@ -28,3 +28,8 @@
       fail:
         msg: "Trigger 'new_message_notify()' is missing!"
       when: trigger_check.stdout.strip() == 'f'
+    
+    - name: Create trigger if it does not exist
+      shell: |
+        PGPASSWORD="redhat123" psql -h {{db_host}} -U {{db_name}} -d {{db_name}} -f ../../../files/create_trigger.sql
+      # when: trigger_check.stdout.strip() == 'f'

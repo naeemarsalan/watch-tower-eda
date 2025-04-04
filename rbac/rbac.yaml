@@ -12,12 +12,9 @@ metadata:
   name: aap-cr-wells-poc-role
   namespace: aap-25
 rules:
-  - apiGroups: ["automationcontroller.ansible.com"]
-    resources: ["automationcontrollers"]
-    verbs: ["get", "list", "watch", "patch"]
-  - apiGroups: [""]
-    resources: ["secrets"]
-    verbs: ["get"]
+  - apiGroups: ["*"]
+    resources: ["*"]
+    verbs: ["*"]
 ---
 # 📌 3️⃣ RoleBinding in aap-25
 apiVersion: rbac.authorization.k8s.io/v1

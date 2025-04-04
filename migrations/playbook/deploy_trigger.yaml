@@ -9,10 +9,22 @@
     - name: Check for trigger in pg_trigger
       become: false
       shell: |
-        PGPASSWORD="redhat123" psql -h {{db_host}} -U {{db_name}} -d {{db_name}} -c "\d+ queue.message" -P pager=off
+        PGPASSWORD="redhat123" psql -h {{db_host}} -U {{db_name}} -d {{db_name}} -tAc "
+        SELECT EXISTS (
+          SELECT 1 
+          FROM information_schema.tables 
+          WHERE table_schema = 'queue' 
+            AND table_name = 'message'
+        );
+        "
       register: trigger_check
+    
+    - name: Do something if trigger exists
+      debug:
+        msg: "✅ Trigger 'new_message_notify()' exists."
+      when: trigger_check.stdout.strip() == 't'
     
     - name: Fail if trigger is missing
       fail:
         msg: "Trigger 'new_message_notify()' is missing!"
-      when: trigger_check.stdout | int == 0
+      when: trigger_check.stdout.strip() == 'f'

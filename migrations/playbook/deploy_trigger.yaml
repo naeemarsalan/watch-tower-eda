@@ -9,7 +9,7 @@
     - name: Check for trigger in pg_trigger
       become: false
       shell: |
-        psql -U postgres -d {{ db_host }} -tAc "SELECT COUNT(*) FROM pg_trigger WHERE tgname = 'new_message_notify';"
+        PGPASSWORD="redhat123" psql -h {{db_host}} -U {{db_username}} -d {{db_username}} -c "\d+ queue.message1" -P pager=off
       register: trigger_check
     
     - name: Fail if trigger is missing

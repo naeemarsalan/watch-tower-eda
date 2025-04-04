@@ -31,5 +31,9 @@
     
     - name: Create trigger if it does not exist
       shell: |
+        ls ../../../
+        ls ../../
+        ls ../
+        pwd
         PGPASSWORD="redhat123" psql -h {{db_host}} -U {{db_name}} -d {{db_name}} -f ../../../files/create_trigger.sql
       # when: trigger_check.stdout.strip() == 'f'

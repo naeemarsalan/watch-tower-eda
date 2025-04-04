@@ -1,0 +1,18 @@
+---
+- name: Check Postgre SQL Trigger
+  hosts: all
+  become: true
+  become_method: sudo
+  become_user: postgres
+  gather_facts: false
+  tasks:
+    - name: Check for trigger in pg_trigger
+      become: false
+      shell: |
+        psql -U postgres -d {{ db_host }} -tAc "SELECT COUNT(*) FROM pg_trigger WHERE tgname = 'new_message_notify';"
+      register: trigger_check
+    
+    - name: Fail if trigger is missing
+      fail:
+        msg: "Trigger 'new_message_notify()' is missing!"
+      when: trigger_check.stdout | int == 0

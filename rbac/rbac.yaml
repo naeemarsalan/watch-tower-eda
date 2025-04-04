@@ -1,0 +1,64 @@
+# 📌 1️⃣ Service Account in aap-25
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: aap-cr-wells-poc
+  namespace: aap-25
+---
+# 📌 2️⃣ Role in aap-25
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: aap-cr-wells-poc-role
+  namespace: aap-25
+rules:
+  - apiGroups: ["automationcontroller.ansible.com"]
+    resources: ["automationcontrollers"]
+    verbs: ["get", "list", "watch", "patch"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get"]
+---
+# 📌 3️⃣ RoleBinding in aap-25
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: aap-cr-wells-poc-rb
+  namespace: aap-25
+subjects:
+  - kind: ServiceAccount
+    name: aap-cr-wells-poc
+    namespace: aap-25
+roleRef:
+  kind: Role
+  name: aap-cr-wells-poc-role
+  apiGroup: rbac.authorization.k8s.io
+---
+# 📌 4️⃣ Role in aap-24 (same permissions as aap-25)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: aap-cr-wells-poc-role
+  namespace: aap-24
+rules:
+  - apiGroups: ["automationcontroller.ansible.com"]
+    resources: ["automationcontrollers"]
+    verbs: ["get", "list", "watch", "patch"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get"]
+---
+# 📌 5️⃣ RoleBinding in aap-24 binding SA from aap-25
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: aap-cr-wells-poc-rb
+  namespace: aap-24
+subjects:
+  - kind: ServiceAccount
+    name: aap-cr-wells-poc
+    namespace: aap-25  # 🔁 SA from another namespace
+roleRef:
+  kind: Role
+  name: aap-cr-wells-poc-role
+  apiGroup: rbac.authorization.k8s.io

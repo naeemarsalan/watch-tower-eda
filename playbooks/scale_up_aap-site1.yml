@@ -9,7 +9,7 @@
         kind: AutomationController
         name: controller-edb-01
         namespace: aap-24
-        merge_type: strategic-merge 
+        merge_type: merge 
         definition:
           spec:
             replicas: 0

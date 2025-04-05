@@ -2,7 +2,7 @@
   hosts: all
   sources:
     - ansible.eda.tick:
-      delay: 5
+        delay: 5
 
   rules:
     - name: Scale up

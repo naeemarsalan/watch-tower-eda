@@ -3,6 +3,11 @@
   sources:
     - ansible.eda.webhook:
         port: 5001
+        host: 0.0.0.0
+        hmac_secret: "secret"
+        hmac_algo: "sha256"
+        hmac_header: "x-hub-signature-256"
+        hmac_format: "base64"
 
   rules:
     - name: Check Postgres Trigger

@@ -1,0 +1,15 @@
+---
+- name: Process Alertmanager events to scale KubeVirt VM sockets
+  hosts: all 
+
+  sources:
+    - ansible.eda.alertmanager:
+        host: 0.0.0.0
+        port: 5001
+
+  rules:
+    - name: Print information on Alert
+      condition: event.payload is defined
+      action:
+        debug:
+          var: event

@@ -1,8 +1,8 @@
 - name: Monitor PostgreSQL Role
   hosts: all
   sources:
-    - ansible.eda.tick:
-        delay: 5
+    - ansible.eda.webhook:
+        port: 5001
 
   rules:
     - name: Check Postgres Trigger

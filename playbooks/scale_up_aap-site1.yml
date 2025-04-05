@@ -12,4 +12,4 @@
         merge_type: merge 
         definition:
           spec:
-            replicas: 0
+            replicas: 1

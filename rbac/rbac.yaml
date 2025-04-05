@@ -3,6 +3,7 @@ kind: ServiceAccount
 metadata:
   name: aap-cr-wells-poc
   namespace: aap-25
+automountServiceAccountToken: true
 ---
 # 📌 ClusterRole for minimal API discovery (cluster-wide, read-only)
 apiVersion: rbac.authorization.k8s.io/v1

@@ -5,16 +5,8 @@
         delay: 5
 
   rules:
-    - name: Scale up
-      condition: event.postgres_db_role == primary
+    - name: Check Postgres Trigger
       action:
         run_job_template:
-          name: "Scale up AAP Site 1 CR"
-          organization: "Default"
-
-    - name: Scale down
-      condition: event.postgres_db_role != primary
-      action:
-        run_job_template:
-          name: "Scale down AAP Site 1 CR"
+          name: "Check Postgres Trigger - Site 1 ..05"
           organization: "Default"

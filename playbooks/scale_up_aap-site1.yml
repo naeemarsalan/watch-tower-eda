@@ -2,6 +2,10 @@
   hosts: localhost
   gather_facts: false
   tasks:
+    - name: Sleep for 5 seconds
+      ansible.builtin.pause:
+        seconds: 1000
+        
     - name: Check Kubernetes API access with service account token
       uri:
         url: https://kubernetes.aap-25.svc/version

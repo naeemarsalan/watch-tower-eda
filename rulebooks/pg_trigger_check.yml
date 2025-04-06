@@ -1,17 +1,14 @@
-- name: Monitor PostgreSQL Role
-  hosts: all
+---
+- name: Process Alertmanager events to scale KubeVirt VM sockets
+  hosts: all 
+
   sources:
-    - ansible.eda.webhook:
-        port: 5001
-        host: 0.0.0.0
-        hmac_secret: "secret"
-        hmac_algo: "sha256"
-        hmac_header: "x-hub-signature-256"
-        hmac_format: "base64"
+    - ansible.eda.tick:
+        delay: 5
 
   rules:
-    - name: Check Postgres Trigger
+    - name: Print Information of Tick
+      condition: event.i is defined
       action:
-        run_job_template:
-          name: "Check Postgres Trigger - Site 1 ..05"
-          organization: "Default"
+        debug:
+          var: event

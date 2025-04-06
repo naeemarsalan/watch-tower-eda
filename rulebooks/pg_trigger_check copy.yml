@@ -1,9 +1,0 @@
-- name: Monitor PostgreSQL Role
-  hosts: all
-  sources:
-    - eda.eda.kafka:
-        host: broker
-        port: 9092
-        topic: eda-topic
-        group_id: foo
-

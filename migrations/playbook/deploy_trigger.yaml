@@ -23,6 +23,10 @@
       debug:
         msg: "✅ Trigger 'new_message_notify()' exists."
       when: trigger_check.stdout.strip() == 't'
+    
+    - name: End play if trigger already exists
+      meta: end_play
+      when: trigger_check.stdout.strip() == 't'
 
     - name: Copy SQL file to remote host
       copy:

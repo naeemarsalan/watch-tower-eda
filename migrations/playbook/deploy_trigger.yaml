@@ -11,10 +11,11 @@
       shell: |
         PGPASSWORD="redhat123" psql -h {{db_host}} -U {{db_name}} -d {{db_name}} -tAc "
         SELECT EXISTS (
-          SELECT 1 
-          FROM information_schema.tables 
-          WHERE table_schema = 'queue' 
-            AND table_name = 'message'
+            SELECT 1
+            FROM information_schema.triggers
+            WHERE event_object_schema = 'queue'
+              AND event_object_table = 'message'
+              AND trigger_name = 'new_insert_trigger'
         );
         "
       register: trigger_check

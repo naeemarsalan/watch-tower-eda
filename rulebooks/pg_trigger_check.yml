@@ -1,8 +1,5 @@
 ---
 - name: PG Trigger Check
-  description: |
-    This rulebook is used to check the trigger of PostgreSQL.
-    It will print the information of the tick event.
   hosts: all 
 
   sources:
@@ -10,12 +7,6 @@
         delay: 5
 
   rules:
-    - name: Print Information of Tick
-      condition: event.i is defined
-      action:
-        debug:
-          var: event
-    
     - name: Check PG Trigger
       condition: event.i is defined
       action:

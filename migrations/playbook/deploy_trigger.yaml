@@ -1,4 +1,3 @@
----
 - name: Check Postgre SQL Trigger
   hosts: all
   become: true
@@ -19,17 +18,12 @@
         );
         "
       register: trigger_check
-    
+
     - name: Do something if trigger exists
       debug:
         msg: "✅ Trigger 'new_message_notify()' exists."
       when: trigger_check.stdout.strip() == 't'
-    
-    - name: Fail if trigger is missing
-      fail:
-        msg: "Trigger 'new_message_notify()' is missing!"
-      when: trigger_check.stdout.strip() == 'f'
-    
+
     - name: Copy SQL file to remote host
       copy:
         src: ../../files/queue.sql
@@ -40,3 +34,21 @@
       shell: |
         PGPASSWORD="redhat123" psql -h {{db_host}} -U {{db_name}} -d {{db_name}} -f /tmp/create_trigger.sql
       when: trigger_check.stdout.strip() == 'f'
+
+    - name: Re-check for trigger after attempting creation
+      shell: |
+        PGPASSWORD="redhat123" psql -h {{db_host}} -U {{db_name}} -d {{db_name}} -tAc "
+        SELECT EXISTS (
+            SELECT 1
+            FROM information_schema.triggers
+            WHERE event_object_schema = 'queue'
+              AND event_object_table = 'message'
+              AND trigger_name = 'new_insert_trigger'
+        );
+        "
+      register: trigger_check_post
+
+    - name: Fail if trigger is still missing
+      fail:
+        msg: "❌ Trigger 'new_message_notify()' is still missing after creation attempt!"
+      when: trigger_check_post.stdout.strip() != 't'

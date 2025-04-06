@@ -20,5 +20,5 @@
       condition: event.i is defined
       action:
         run_job_template:
-          name: "Check Postgres - Site 1"
+          name: "Check Postgres Trigger - Site 1 ..05"
           organization: "Default"

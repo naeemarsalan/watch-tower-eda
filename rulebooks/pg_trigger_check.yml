@@ -1,5 +1,8 @@
 ---
-- name: Process Alertmanager events to scale KubeVirt VM sockets
+- name: PG Trigger Check
+  description: |
+    This rulebook is used to check the trigger of PostgreSQL.
+    It will print the information of the tick event.
   hosts: all 
 
   sources:
@@ -12,3 +15,15 @@
       action:
         debug:
           var: event
+    
+    - name: Check PG Trigger
+      condition: event.i is defined
+      action:
+        run_job_template:
+          name: "Check Postgres Trigger - Site 1 ..05"
+          organization: "Default"
+          extra_vars:
+            db_host: "172.16.0.5"
+            db_name: "awx"
+    
+    

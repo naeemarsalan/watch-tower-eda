@@ -3,12 +3,11 @@ CREATE SCHEMA IF NOT EXISTS queue;
 
 -- 2. Create table if not exists
 CREATE TABLE IF NOT EXISTS queue.message (
-    id UUID NOT NULL DEFAULT uuid_generate_v4(),
+    id BIGSERIAL PRIMARY KEY,
     channel TEXT,
     data JSON,
     created_at TIMESTAMPTZ DEFAULT now(),
-    updated_at TIMESTAMPTZ DEFAULT now(),
-    PRIMARY KEY (id)
+    updated_at TIMESTAMPTZ DEFAULT now()
 );
 
 -- 3. Create function for notification

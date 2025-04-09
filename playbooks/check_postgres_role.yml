@@ -23,6 +23,11 @@
             primary
           {% endif %}
 
+    - name: Debug the pg_role var. 
+      ansible.builtin.debug:
+        var: pg_role | trim
+
     - name: Use pg_notify to alert EDA of any changes. 
       command: | 
         psql -h "{{ db_host }}" -U postgres -d "{{ db_name }}" -c "NOTIFY text, '{\"postgres_db_role\":\"{{ pg_role | trim }}\"}'"
+      when: pg_role | trim == "primary"

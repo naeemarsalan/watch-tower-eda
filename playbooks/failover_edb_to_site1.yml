@@ -4,6 +4,6 @@
   gather_facts: false
   tasks: 
     - name: Failover EDB cluster to Site 1 as primary/leader. 
-      shell: | 
-        tpaexec playbook stagecluster /opt/EDB/TPA/architectures/M1/commands/switchover.yml -e "target=upended"
-      chdir: /home/chammer/edb_clusters
+      ansible.builtin.shell:
+        cmd: tpaexec playbook stagecluster /opt/EDB/TPA/architectures/M1/commands/switchover.yml -e "target=upended"
+        chdir: /home/chammer/edb_clusters

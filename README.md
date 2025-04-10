@@ -62,7 +62,7 @@ Install dependencies:
 ```
 ansible-galaxy collection install -r requirements.yml
 ```
-
+## Usage
 ## Usage in Ansible Automation Platform:
 To use Watch Tower EDA in AAP:  
 

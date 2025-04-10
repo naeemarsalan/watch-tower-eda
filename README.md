@@ -44,6 +44,8 @@ podman images # grab the Image ID to then push to automation hub.
 podman login aap.example.com
 podman push <paste Image ID> aap.example.com/namespace_example/k8s_ee
 ```
+## Workflow Diagram: 
+![alt text](<screenshots/image (16).png>)
 
 ## Installation
 

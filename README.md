@@ -8,6 +8,7 @@ Watch Tower EDA is a project designed to monitor and failover a multi-site Ansib
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Examples](#examples)
 
 ## Overview
 
@@ -89,5 +90,44 @@ To use Watch Tower EDA in AAP:
 Once complete you should have four playbooks:
 ![alt text](screenshots/four_templates.png)
 9. With all of the playbooks configured you can now swap over to the `Automation Decisions - Event-Driven Ansible` tab on the left side of the screen to configure the following:
-    - Decision Environment: A container that has the required dependencies and collections to run the ansible.eda collection. Luckily, our de-supported-rhelX images have this already. 
-    - 
+    - Credentials: You will need to create a container registry credential to sync the decision environment from registry.redhat.io as well as a RH-AAP Credential for EDA to trigger playbook runs from events received. 
+        - Registry Credential
+        ![alt text](screenshots/regcred.png)
+        - AAP API Credential
+        ![alt text](screenshots/rhaapcred.png)
+    - Decision Environment: A container that has the required dependencies and collections to run the ansible.eda collection. Luckily, our `de-supported-rhelX` images have this already. 
+    ![alt text](screenshots/de-supported.png)
+    - Project: This should have already been done but in the case you forgot to also create and sync the project in EDA, please do so now. 
+    - Rulebook Activations: Now you can tie it all together by creating rulebook activations for Sites 1 & 2. 
+    ![alt text](screenshots/rba.png)
+        - Note the Variables defined at the bottom that point to the respective site's co-located DB instance. 
+        - Repeat this process for site 2 and tailor the variables accordingly. 
+    - Note that because there should only be one primary database node in the cluster, the site with the standby will fail due to being in read-only mode. This is expected and keeping the `Restart Policy` set to `Always` will prevent the rulebook activation from timing out and stopping after 5 consecutive failed attempts. 
+    ![alt text](screenshots/rba2.png)
+
+## Examples
+## Failover
+- Failover from `Site 1 -> 2`.
+    - Primary db is currently located in Site 1. Ignore the failure for Site 2, since it's read-only standby mode for now.
+    ![alt text](screenshots/failover1.png)
+    - `oc get pods | grep controller` shows that our pods are running on Site 1. 
+        ```
+        $ oc get pods | grep controller-edb
+        controller-edb-01-task-7bbd7c7f6d-9xxqd                           4/4     Running   0               4h59m
+        controller-edb-01-web-5d98c76bcf-qf92k                            3/3     Running   0               4h59m
+        ```
+    - Trigger automated failover playbook to promote the `standby -> primary` in site 2. 
+    ![alt text](screenshots/failover2.png)
+    - Now we'll see the rule activations flip over and begin running on Site 2:
+    ![alt text](screenshots/failover3.png)
+    - Which will trigger the scale up playbook to run on site 2 once pg_notify triggers on site 2 as the new primary.
+    ![alt text](screenshots/failover4.png)
+    - We can confirm that Site 1's database is now in standby mode.
+    ![alt text](screenshots/failover5.png)
+    - And we can now confirm the pods in Site 2 have spun up web/task pods for Automation Controller. 
+        ```
+        $ oc get pods | grep controller-edb
+        controller-edb-02-task-bb9cc7c69-8hb67                            4/4     Running   0          4m33s
+        controller-edb-02-web-f769b9684-5r4hq                             3/3     Running   0          4m30s
+        ```
+        

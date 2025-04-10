@@ -8,8 +8,6 @@ Watch Tower EDA is a project designed to monitor and failover a multi-site Ansib
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Overview
 

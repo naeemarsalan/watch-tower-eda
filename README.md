@@ -68,8 +68,28 @@ ansible-galaxy collection install -r requirements.yml
 ## Usage in Ansible Automation Platform:
 To use Watch Tower EDA in AAP:  
 
-1. Create a project in AAP and sync the git repository:
+1. Create a project in **AAP Controller and EDA** and sync both:
 ![alt text](screenshots/image.png)
-
-
-
+2. Create an inventory and populate it with Postgres cluster hosts, ensure they're enabled.
+![alt text](screenshots/inventory.png)
+3. Credentials - You will need to create Openshift Token credentials in AAP to authenticate into Openshift and scale your CR's accordingly.
+![alt text](screenshots/credentials.png)
+4. Setup the Check Postgres playbooks for Site 1 & Site 2. 
+![alt text](screenshots/check_postgres.png)
+    - Note the extra vars specified that point to the `db_host: <site 1 db IP address>` as well as the `db_name: awx` that has the postgres trigger configured for pg_notify. 
+5. After creating the job template, click on the schedule tab for the playbooks and create a schedule that runs the playbook every minute. 
+![alt text](screenshots/schedule.png)
+6. Repeat steps 4 & 5 but for Site 2 this time. 
+7. Next create the Check Postgres Trigger playbook:
+![alt text](screenshots/check_trigger.png)
+    - Note the extra vars specified as well as the enabled options.
+        - Priviledge Escalation
+        - Concurrent Jobs
+    - Additionally with DB replication you should only need to target the primary initially with this playbook. You can also use preference with scheduling this however often you'd like. 
+8. Finally create the four job templates using the scale up/down playbooks for each site. This equals out to 2 job templates per site (up/down playbooks are separate) and 4 playbooks total across both sites. Note that for these playbooks you will need to use your Openshift API credential created earlier as well as the `k8s_ee` as an execution environment that has the `redhat.openshift` collection installed. 
+![alt text](screenshots/templates.png)
+Once complete you should have four playbooks:
+![alt text](screenshots/four_templates.png)
+9. With all of the playbooks configured you can now swap over to the `Automation Decisions - Event-Driven Ansible` tab on the left side of the screen to configure the following:
+    - Decision Environment: A container that has the required dependencies and collections to run the ansible.eda collection. Luckily, our de-supported-rhelX images have this already. 
+    - 

@@ -38,4 +38,4 @@
         src: ../files/aap-cr-down-site1.yml
         validate_certs: false
       when: pg_role | trim != "primary"
-      delegate_to: localhost
+      delegate_to: 127.0.0.1

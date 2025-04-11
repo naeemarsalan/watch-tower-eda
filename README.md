@@ -14,6 +14,15 @@ Watch Tower EDA is a project designed to monitor and failover a multi-site Ansib
 
 Watch Tower EDA accomplishes automated failover by managing a multi-site AAP deployment using Ansible playbooks with scheduled runs. Additionally Event-Driven-Ansible is configured to listen and watch for events on the Postgres DB cluster deployed in a highly available architecture. 
 
+## Collections
+```
+cat requirements.yml
+---
+collections:
+  redhat.openshift
+  ansible.eda
+```
+
 ## Features   
 ## Playbooks:
 - Check PostgreSQL Database Role: This playbook runs a psql command to determine if the postgres instance is one of the following: _'Primary/Leader, Standby or offline'_.

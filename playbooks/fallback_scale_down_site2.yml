@@ -35,7 +35,7 @@
     - name: Scale AAP CR replicas down if the role of the database is not the primary. 
       redhat.openshift.k8s:
         state: present
-        src: ../files/aap-cr-down-site1.yml
+        src: ../files/aap-cr-down-site2.yml
         validate_certs: false
       when: pg_role | trim != "primary"
       delegate_to: localhost

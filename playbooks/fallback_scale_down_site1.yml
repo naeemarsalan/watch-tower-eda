@@ -1,0 +1,35 @@
+---
+- name: Check PostgreSQL Role
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Check if PostgreSQL is reachable
+      command: |
+        psql -U postgres -h {{ db_host }} -c "SELECT pg_is_in_recovery();"
+      become: true
+      become_method: sudo
+      become_user: postgres
+      register: pg_status
+      ignore_errors: true
+
+    - name: Set fact based on status
+      set_fact:
+        pg_role: >-
+          {% if pg_status.rc != 0 %}
+            offline
+          {% elif "t" in pg_status.stdout %}
+            standby
+          {% else %}
+            primary
+          {% endif %}
+
+    - name: Debug the pg_role var. 
+      ansible.builtin.debug:
+        var: pg_role | trim
+
+    - name: Scale AAP CR replicas according to role. 
+      redhat.openshift.k8s:
+        state: present
+        src: ../files/aap-cr-down-site1.yml
+        validate_certs: false
+      when: pg_role | trim != "primary"

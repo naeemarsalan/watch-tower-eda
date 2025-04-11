@@ -31,6 +31,8 @@
 
 - name: Scale AAP CR accordingly. 
   hosts: all
+  vars:
+    ansible_python_interpretor: /usr/bin/python3
   tasks:
     - name: Scale AAP CR replicas down if the role of the database is not the primary. 
       redhat.openshift.k8s:
@@ -38,4 +40,4 @@
         src: ../files/aap-cr-down-site1.yml
         validate_certs: false
       when: pg_role | trim != "primary"
-      delegate_to: 127.0.0.1
+      delegate_to: localhost

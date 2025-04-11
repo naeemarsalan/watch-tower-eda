@@ -27,7 +27,7 @@
       ansible.builtin.debug:
         var: pg_role | trim
 
-    - name: Scale AAP CR replicas according to role. 
+    - name: Scale AAP CR replicas down if the role of the database is not the primary. 
       redhat.openshift.k8s:
         state: present
         src: ../files/aap-cr-down-site1.yml

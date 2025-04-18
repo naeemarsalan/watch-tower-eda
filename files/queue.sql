@@ -1,13 +1,15 @@
 -- 1. Create schema if not exists
 CREATE SCHEMA IF NOT EXISTS queue;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- 2. Create table if not exists
 CREATE TABLE IF NOT EXISTS queue.message (
-    id BIGSERIAL PRIMARY KEY,
+    id UUID NOT NULL DEFAULT uuid_generate_v4(),
     channel TEXT,
     data JSON,
     created_at TIMESTAMPTZ DEFAULT now(),
-    updated_at TIMESTAMPTZ DEFAULT now()
+    updated_at TIMESTAMPTZ DEFAULT now(),
+    PRIMARY KEY (id)
 );
 
 -- 3. Create function for notification

@@ -1,14 +1,14 @@
 ---
 - name: Check PostgreSQL Role
   hosts: all
-  become: true
-  become_method: sudo
-  become_user: postgres
   gather_facts: false
   tasks:
     - name: Check if PostgreSQL is reachable
       command: |
         psql -U postgres -h {{ db_host }} -c "SELECT pg_is_in_recovery();"
+      become: true
+      become_method: sudo
+      become_user: postgres
       register: pg_status
       ignore_errors: true
 
@@ -22,12 +22,20 @@
           {% else %}
             primary
           {% endif %}
+        cacheable: yes
 
     - name: Debug the pg_role var. 
       ansible.builtin.debug:
         var: pg_role | trim
 
-    - name: Use pg_notify to alert EDA of any changes. 
-      command: | 
-        psql -h "{{ db_host }}" -U postgres -d "{{ db_name }}" -c "NOTIFY text, '{\"postgres_db_role\":\"{{ pg_role | trim }}\"}'"
-      when: pg_role | trim == "primary"
+
+- name: Scale AAP CR accordingly. 
+  hosts: all
+  tasks:
+    - name: Scale AAP CR replicas down if the role of the database is not the primary. 
+      redhat.openshift.k8s:
+        state: present
+        src: ../files/aap-cr-down-site1.yml
+        validate_certs: false
+      when: pg_role | trim != "primary"
+      delegate_to: localhost

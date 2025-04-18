@@ -1,0 +1,13 @@
+- name: Fallback PostgreSQL Role Check
+  hosts: all
+  sources:
+    - ansible.eda.tick:
+        delay: 60  # Run every 60 seconds
+
+  rules:
+    - name: Periodic PostgreSQL Role Check
+      condition: event.i is defined
+      action:
+        run_job_template:
+          name: "Check Postgres Role"
+          organization: "Default"

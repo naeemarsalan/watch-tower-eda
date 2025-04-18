@@ -1,0 +1,111 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: aap-cr-wells-poc
+  namespace: aap-25
+---
+# 📌 ClusterRole for minimal API discovery (cluster-wide, read-only)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: aap-discovery-only
+rules:
+  - nonResourceURLs: ["/version", "/api", "/apis", "/apis/*"]
+    verbs: ["get"]
+---
+# 📌 Role in aap-24 for patching AutomationController + reading secrets
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: aap-cr-wells-poc-role
+  namespace: aap-24
+rules:
+  - apiGroups: ["automationcontroller.ansible.com"]
+    resources: ["automationcontrollers"]
+    verbs: ["get", "list", "watch", "patch"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get"]
+---
+# 📌 RoleBinding in aap-24 (namespace permissions)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: bind-aap-cr-role
+  namespace: aap-24
+subjects:
+  - kind: ServiceAccount
+    name: aap-cr-wells-poc
+    namespace: aap-25
+roleRef:
+  kind: Role
+  name: aap-cr-wells-poc-role
+  apiGroup: rbac.authorization.k8s.io
+---
+# 📌 RoleBinding in aap-24 to allow discovery access via ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: bind-discovery-role
+  namespace: aap-24
+subjects:
+  - kind: ServiceAccount
+    name: aap-cr-wells-poc
+    namespace: aap-25
+roleRef:
+  kind: ClusterRole
+  name: aap-discovery-only
+  apiGroup: rbac.authorization.k8s.io
+---
+# 📌 Role in aap-24-dr (same permissions as aap-24)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: aap-cr-wells-poc-role
+  namespace: aap-24-dr
+rules:
+  - apiGroups: ["automationcontroller.ansible.com"]
+    resources: ["automationcontrollers"]
+    verbs: ["get", "list", "watch", "patch"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get"]
+---
+# 📌 RoleBinding in aap-24-dr (namespace permissions)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: bind-aap-cr-role
+  namespace: aap-24-dr
+subjects:
+  - kind: ServiceAccount
+    name: aap-cr-wells-poc
+    namespace: aap-25
+roleRef:
+  kind: Role
+  name: aap-cr-wells-poc-role
+  apiGroup: rbac.authorization.k8s.io
+---
+# 📌 RoleBinding in aap-24-dr to allow discovery access via ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: bind-discovery-role
+  namespace: aap-24-dr
+subjects:
+  - kind: ServiceAccount
+    name: aap-cr-wells-poc
+    namespace: aap-25
+roleRef:
+  kind: ClusterRole
+  name: aap-discovery-only
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: aap-sa-token
+  namespace: aap-25
+  annotations:
+    kubernetes.io/service-account.name: aap-cr-wells-poc
+type: kubernetes.io/service-account-token

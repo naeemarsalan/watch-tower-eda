@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: call-eda-every-5min
+  namespace: aap-25
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: curl
+              image: curlimages/curl
+              command:
+                - curl
+                - -XPOST
+                - http://eda-service.eda.svc:5001/
+                - -H
+                - "Content-Type: application/json"
+                - -d
+                - '{"trigger": "tick"}'
+          restartPolicy: OnFailure
